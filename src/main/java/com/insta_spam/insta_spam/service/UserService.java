@@ -1,6 +1,7 @@
 package com.insta_spam.insta_spam.service;
 
 import com.github.instagram4j.instagram4j.IGClient;
+import com.github.instagram4j.instagram4j.actions.users.UserAction;
 import com.github.instagram4j.instagram4j.exceptions.IGLoginException;
 import com.insta_spam.insta_spam.repo.UserRepo;
 import org.springframework.stereotype.Service;
@@ -51,4 +52,22 @@ public class UserService implements UserRepo {
                 })
                 .join(); // block current thread until complete
     }
+
+    @Override
+    public void getInfoAboutUser() {
+        IGClient client = getUser();
+        client.actions().users()
+                .findByUsername("samsonova.marketing")
+                .thenCompose(UserAction::getFriendship)
+                .thenAccept(friendship -> {
+                    System.out.println(friendship.isFollowing());
+                    System.out.println(friendship.is_bestie());
+                    System.out.println(friendship.isBlocking());
+                    System.out.println(friendship.isFollowed_by());
+                })
+                .join();
+
+    }
+
+
 }
