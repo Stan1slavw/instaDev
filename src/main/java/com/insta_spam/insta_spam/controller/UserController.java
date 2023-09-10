@@ -15,7 +15,7 @@ public class UserController {
     public String testMain(){
         userService.login();
         userService.uploadPhoto();
-        userService.sendFriendRequest();
+        userService.getInfoAboutUser();
         return "main-page";
     }
 }
