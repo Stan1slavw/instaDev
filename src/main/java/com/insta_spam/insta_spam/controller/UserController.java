@@ -14,8 +14,9 @@ public class UserController {
     @GetMapping("/")
     public String testMain(){
         userService.login();
-        userService.uploadPhoto();
+//        userService.uploadPhoto();
         userService.getInfoAboutUser();
+        userService.setProfilePicture();
         return "main-page";
     }
 }

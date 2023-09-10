@@ -3,10 +3,17 @@ package com.insta_spam.insta_spam.service;
 import com.github.instagram4j.instagram4j.IGClient;
 import com.github.instagram4j.instagram4j.actions.users.UserAction;
 import com.github.instagram4j.instagram4j.exceptions.IGLoginException;
+import com.github.instagram4j.instagram4j.responses.accounts.AccountsUserResponse;
 import com.insta_spam.insta_spam.repo.UserRepo;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.concurrent.CompletableFuture;
+
+import com.github.instagram4j.instagram4j.requests.accounts.*;
 
 @Service
 public class UserService implements UserRepo {
@@ -70,4 +77,28 @@ public class UserService implements UserRepo {
     }
 
 
+    @Override
+    public CompletableFuture<AccountsUserResponse> setProfilePicture(byte[] photo) {
+        IGClient client = getUser();
+        return client.actions().upload()
+                .photo(photo, String.valueOf(System.currentTimeMillis()))
+                .thenCompose(res -> new AccountsChangeProfilePictureRequest(res.getUpload_id())
+                        .execute(client));
+    }
+
+
+    public CompletableFuture<AccountsUserResponse> setProfilePicture() {
+         String imagePath = "src/main/resources/static/images/ava.jpg";
+        try {
+            // Читаем изображение из файла в виде массива байтов
+            byte[] photoBytes = Files.readAllBytes(Paths.get(imagePath));
+
+            // Вызываем метод с массивом байтов изображения
+            return setProfilePicture(photoBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Обработка ошибки чтения файла
+            return CompletableFuture.completedFuture(null); // или другой обработчик ошибки
+        }
+    }
 }
