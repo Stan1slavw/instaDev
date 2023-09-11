@@ -33,13 +33,13 @@ public class UserService implements UserRepo {
         System.out.println(client);
     }
 
-    public IGClient getUser() {
+    public IGClient getUser(String username, String password) {
         IGClient client;
         {
             try {
                 client = IGClient.builder()
-                        .username("jhonforict123")
-                        .password("Jhonjhonjhon123")
+                        .username(username)
+                        .password(password)
                         .login();
                 return client;
             } catch (IGLoginException e) {
@@ -50,7 +50,7 @@ public class UserService implements UserRepo {
 
     @Override
     public void uploadPhoto() {
-        IGClient client = getUser();
+        IGClient client = getUser("jhonforict123", "Jhonjhonjhon123");
         client.actions()
                 .timeline()
                 .uploadPhoto(new File("src/main/resources/static/images/ava.jpg"), "My Caption")
@@ -62,7 +62,7 @@ public class UserService implements UserRepo {
 
     @Override
     public void getInfoAboutUser() {
-        IGClient client = getUser();
+        IGClient client = getUser("jhonforict123", "Jhonjhonjhon123");
         client.actions().users()
                 .findByUsername("samsonova.marketing")
                 .thenCompose(UserAction::getFriendship)
@@ -79,7 +79,7 @@ public class UserService implements UserRepo {
 
     @Override
     public CompletableFuture<AccountsUserResponse> setProfilePicture(byte[] photo) {
-        IGClient client = getUser();
+        IGClient client = getUser("jhonforict123", "Jhonjhonjhon123");
         return client.actions().upload()
                 .photo(photo, String.valueOf(System.currentTimeMillis()))
                 .thenCompose(res -> new AccountsChangeProfilePictureRequest(res.getUpload_id())
