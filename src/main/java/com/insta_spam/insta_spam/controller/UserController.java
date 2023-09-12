@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 public class UserController {
 
@@ -32,8 +34,14 @@ public class UserController {
     @PostMapping("/loginInst")
     public String logging(@RequestParam("username") String username, @RequestParam("password") String password, RedirectAttributes redirectAttributes){
        IGClient client = userService.getUser(username, password);
-       client.actions().account().setBio("testBio2").join();
         redirectAttributes.addAttribute("username", username);
         return "redirect:/";
+    }
+
+    @GetMapping("/getInfo")
+    public String getInfo(@RequestParam("username") String username, @RequestParam("password") String password, Model model){
+        List<String> userInfoList = userService.getInfoAboutUser(username, password);
+        model.addAttribute("userInfoList", userInfoList);
+        return "UserInfo";
     }
 }

@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.github.instagram4j.instagram4j.requests.accounts.*;
@@ -60,19 +62,38 @@ public class UserService implements UserRepo {
                 .join(); // block current thread until complete
     }
 
+
     @Override
-    public void getInfoAboutUser() {
-        IGClient client = getUser("jhonforict123", "Jhonjhonjhon123");
+    public List<String> getInfoAboutUser(String username, String password) {
+        IGClient client = getUser(username, password);
+        List<String> resultList = new ArrayList<>();
         client.actions().users()
                 .findByUsername("samsonova.marketing")
                 .thenCompose(UserAction::getFriendship)
                 .thenAccept(friendship -> {
-                    System.out.println(friendship.isFollowing());
-                    System.out.println(friendship.is_bestie());
-                    System.out.println(friendship.isBlocking());
-                    System.out.println(friendship.isFollowed_by());
+                    if (friendship.isFollowing()) {
+                        resultList.add("Вы подписаны на пользователя");
+                    } else {
+                        resultList.add("Вы не подписаны на пользователя");
+                    }
+                    if (friendship.is_bestie()) {
+                        resultList.add("Пользователь находится в списке лучших друзей");
+                    } else {
+                        resultList.add("Пользователя нет в списке лучших друзей");
+                    }
+                    if (friendship.isBlocking()) {
+                        resultList.add("Пользователь заблокирован");
+                    } else {
+                        resultList.add("Пользователь не заблокирован");
+                    }
+                    if (friendship.isFollowed_by()) {
+                        resultList.add("Пользователь подписан на вас");
+                    } else {
+                        resultList.add("Пользователь не подписан на вас");
+                    }
                 })
                 .join();
+        return resultList;
 
     }
 
@@ -88,7 +109,7 @@ public class UserService implements UserRepo {
 
 
     public CompletableFuture<AccountsUserResponse> setProfilePicture() {
-         String imagePath = "src/main/resources/static/images/ava.jpg";
+        String imagePath = "src/main/resources/static/images/ava.jpg";
         try {
             // Читаем изображение из файла в виде массива байтов
             byte[] photoBytes = Files.readAllBytes(Paths.get(imagePath));
@@ -101,4 +122,5 @@ public class UserService implements UserRepo {
             return CompletableFuture.completedFuture(null); // или другой обработчик ошибки
         }
     }
+
 }
