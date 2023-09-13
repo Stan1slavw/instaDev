@@ -17,7 +17,7 @@ public class UserController {
     public UserService userService;
 
     @GetMapping("/")
-    public String testMain(@RequestParam("username") String username, Model model){
+    public String testMain(@ModelAttribute("username") String username, Model model){
         model.addAttribute("username", username);
 //        userService.login();
 //        userService.uploadPhoto();
