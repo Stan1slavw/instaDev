@@ -59,7 +59,8 @@
   <p th:unless="${username}">Выполните вход в свой Instagram аккаунт, чтобы продолжить.</p>
   <input type="button" th:unless="${username}" value="Войти в Instagram" onclick="window.location.href = 'loginInst'"/>
   <br>
-  <a th:if="${username}" th:href="@{/getInfo(username=${username})}">
+
+  <a th:if="${username}" th:href="@{/getInfo(username=${username}, password=${password})}">
     <input type="button" value="Посмотреть информацию о пользователе" />
   </a>
 </div>

@@ -17,12 +17,15 @@ public class UserController {
     public UserService userService;
 
     @GetMapping("/")
-    public String testMain(@ModelAttribute("username") String username, Model model){
+    public String testMain(@ModelAttribute("username") String username, @ModelAttribute("password") String password, Model model){
+        if (username.isEmpty()){
+            username = null;
+        }
+        if (password.isEmpty()){
+            password = null;
+        }
         model.addAttribute("username", username);
-//        userService.login();
-//        userService.uploadPhoto();
-//        userService.getInfoAboutUser();
-//        userService.setProfilePicture();
+        model.addAttribute("password", password);
         return "main-page";
     }
 
@@ -35,6 +38,7 @@ public class UserController {
     public String logging(@RequestParam("username") String username, @RequestParam("password") String password, RedirectAttributes redirectAttributes){
        IGClient client = userService.getUser(username, password);
         redirectAttributes.addAttribute("username", username);
+        redirectAttributes.addAttribute("password", password);
         return "redirect:/";
     }
 
