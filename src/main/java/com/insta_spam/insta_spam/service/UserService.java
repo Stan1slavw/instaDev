@@ -25,8 +25,8 @@ public class UserService implements UserRepo {
         {
             try {
                 client = IGClient.builder()
-                        .username("jhonforict123")
-                        .password("Jhonjhonjhon123")
+                        .username("username")
+                        .password("password")
                         .login();
             } catch (IGLoginException e) {
                 throw new RuntimeException(e);
@@ -52,7 +52,7 @@ public class UserService implements UserRepo {
 
     @Override
     public void uploadPhoto() {
-        IGClient client = getUser("jhonforict123", "Jhonjhonjhon123");
+        IGClient client = getUser("username", "password");
         client.actions()
                 .timeline()
                 .uploadPhoto(new File("src/main/resources/static/images/ava.jpg"), "My Caption")
@@ -100,7 +100,7 @@ public class UserService implements UserRepo {
 
     @Override
     public CompletableFuture<AccountsUserResponse> setProfilePicture(byte[] photo) {
-        IGClient client = getUser("jhonforict123", "Jhonjhonjhon123");
+        IGClient client = getUser("username", "password");
         return client.actions().upload()
                 .photo(photo, String.valueOf(System.currentTimeMillis()))
                 .thenCompose(res -> new AccountsChangeProfilePictureRequest(res.getUpload_id())
